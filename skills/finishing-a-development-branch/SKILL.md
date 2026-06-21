@@ -239,3 +239,15 @@ git worktree prune  # Self-healing: clean up any stale registrations
 - Clean up worktree for Options 1 & 4 only
 - `cd` to main repo root before worktree removal
 - Run `git worktree prune` after removal
+
+<!-- superpowers-specs:begin -->
+## Spec Sync (companion plugin: superpowers-specs)
+
+After Step 1 (tests pass), and only when integrating the work — **Option 1 (merge locally)**
+or **Option 2 (push and create a PR)** — check for delta specs under
+`docs/specs/changes/<feature>/` (where `<feature>` is the branch name, or the kebab change
+name). If any exist, invoke the `syncing-specs` skill BEFORE performing the merge/push, so
+the merged canonical specs and archived deltas are committed and ship with the code.
+
+Skip this for Option 3 (keep as-is) and Option 4 (discard).
+<!-- superpowers-specs:end -->
