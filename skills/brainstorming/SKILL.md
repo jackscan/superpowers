@@ -158,8 +158,7 @@ A question about a UI topic is not automatically a visual question. "What does p
 If they agree to the companion, read the detailed guide before proceeding:
 `skills/brainstorming/visual-companion.md`
 
-<!-- superpowers-specs:begin -->
-## Living Specs (companion plugin: superpowers-specs)
+## Living Specs
 
 When `docs/specs/` exists in the project (the opt-in switch for living specs), extend this
 skill as follows; otherwise ignore this section:
@@ -171,4 +170,3 @@ skill as follows; otherwise ignore this section:
   again to *capture* a behavior-only delta under
   `docs/specs/changes/<feature>/specs/<capability>/spec.md`. This supplements, and does not
   replace, the design doc. Then continue to the writing-plans handoff as usual.
-<!-- superpowers-specs:end -->
