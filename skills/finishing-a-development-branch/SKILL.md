@@ -249,3 +249,17 @@ name). If any exist, invoke the `syncing-specs` skill BEFORE performing the merg
 the merged canonical specs and archived deltas are committed and ship with the code.
 
 Skip this for Option 3 (keep as-is) and Option 4 (discard).
+
+<!-- superpowers-architecture:begin -->
+## Architecture Reconcile (when docs/architecture.md is in use)
+
+After Step 1 (tests pass), and only when integrating the work — **Option 1 (merge locally)**
+or **Option 2 (push and create a PR)** — if `docs/architecture.md` exists, invoke the
+`documenting-architecture` skill's *reconcile* mode BEFORE performing the merge/push, so
+the updated architecture doc and roadmap ship with the code.
+
+Skip this for Option 3 (keep as-is) and Option 4 (discard).
+
+Reconcile can also be invoked on-demand at any time (e.g. after a direct-to-main commit)
+by running `documenting-architecture` reconcile explicitly.
+<!-- superpowers-architecture:end -->

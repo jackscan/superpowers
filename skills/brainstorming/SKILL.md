@@ -170,3 +170,21 @@ skill as follows; otherwise ignore this section:
   again to *capture* a behavior-only delta under
   `docs/specs/changes/<feature>/specs/<capability>/spec.md`. This supplements, and does not
   replace, the design doc. Then continue to the writing-plans handoff as usual.
+
+<!-- superpowers-architecture:begin -->
+## Architecture & Roadmap (when docs/architecture.md is in use)
+
+When `docs/architecture.md` exists in the project (the opt-in switch for living architecture
+docs), extend this skill as follows; otherwise ignore this section:
+
+- **During "Explore project context"** — invoke the `documenting-architecture` skill's
+  *consult* mode: read `docs/architecture.md` for current structure context. Check the
+  `last-reconciled` marker against `HEAD`; if stale, surface this to the user and suggest
+  running on-demand reconcile before continuing the design. On accept, invoke reconcile and
+  re-read; on decline, proceed with the stale doc, treating its component map with
+  skepticism where the design depends on it.
+- **After the design doc is written and self-reviewed** — invoke `documenting-architecture`
+  again to add a `### In progress` roadmap entry under `## Roadmap` in
+  `docs/architecture.md`, linking to the design doc. Then continue to the writing-plans
+  handoff as usual.
+<!-- superpowers-architecture:end -->
