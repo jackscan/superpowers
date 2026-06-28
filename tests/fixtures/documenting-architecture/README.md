@@ -97,7 +97,7 @@ fixture's inputs, follow the skill, and diff the result against the golden `expe
    `/tmp/da-stale`. The agent MUST:
    - Read `docs/architecture.md`.
    - Run the staleness check (marker vs HEAD).
-   - Surface "2 commits stale" to the user and suggest running on-demand reconcile before
+   - Surface "3 commits stale" to the user and suggest running on-demand reconcile before
      continuing.
 3. Verify the staleness message mentions the commit count:
    ```bash
