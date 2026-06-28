@@ -171,7 +171,6 @@ skill as follows; otherwise ignore this section:
   `docs/specs/changes/<feature>/specs/<capability>/spec.md`. This supplements, and does not
   replace, the design doc. Then continue to the writing-plans handoff as usual.
 
-<!-- superpowers-architecture:begin -->
 ## Architecture & Roadmap (when docs/architecture.md is in use)
 
 When `docs/architecture.md` exists in the project (the opt-in switch for living architecture
@@ -187,4 +186,3 @@ docs), extend this skill as follows; otherwise ignore this section:
   again to add a `### In progress` roadmap entry under `## Roadmap` in
   `docs/architecture.md`, linking to the design doc. Then continue to the writing-plans
   handoff as usual.
-<!-- superpowers-architecture:end -->
