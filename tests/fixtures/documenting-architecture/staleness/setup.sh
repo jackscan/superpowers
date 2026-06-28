@@ -12,7 +12,7 @@ git config user.name "test"
 cp "$HERE/before/architecture.md" docs/architecture.md
 git add -A && git commit -qm "initial"
 OLD_HASH=$(git rev-parse HEAD)
-sed -i "s/OLDER/$OLD_HASH/" docs/architecture.md
+sed -i.bak "s/OLDER/$OLD_HASH/" docs/architecture.md && rm -f docs/architecture.md.bak
 git add -A && git commit -qm "set marker"
 
 # Three commits since marker (set marker + change 1 + change 2) -> stale by 3

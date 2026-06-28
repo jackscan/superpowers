@@ -106,3 +106,28 @@ fixture's inputs, follow the skill, and diff the result against the golden `expe
    ```
    The fixture is satisfied when the agent surfaces the staleness and offers reconcile,
    regardless of whether the user accepts or declines (both paths are valid per the spec).
+
+## documenting-architecture — missing-marker on-demand reconcile
+
+1. Set up the scratch git repo:
+   ```bash
+   bash superpowers/tests/fixtures/documenting-architecture/missing-marker/setup.sh /tmp/da-missing-marker
+   ```
+2. Follow the `documenting-architecture` skill's reconcile mode (on-demand path) rooted at
+   `/tmp/da-missing-marker`, with no design doc. The `docs/architecture.md` has no
+   `last-reconciled` marker, so the skill falls back to a bounded window of the last 20
+   commits and marks uncertain inferences with `<TODO: verify>`.
+3. Structural checks:
+   ```bash
+   DOC=/tmp/da-missing-marker/docs/architecture.md
+   grep -q '<TODO: verify>' "$DOC"  && echo "uncertain inferences marked OK"
+   grep -q '### Component: Worker' "$DOC" && echo "worker component added OK"
+   ```
+4. Marker check: the marker was written to HEAD:
+   ```bash
+   HEAD=$(git -C /tmp/da-missing-marker rev-parse HEAD)
+   grep -q "last-reconciled: $HEAD" "$DOC" && echo "marker OK"
+   ```
+   The fixture is satisfied when all three structural checks pass: uncertain inferences are
+   marked with `<TODO: verify>`, the Worker component from the real commit is added to the
+   component map, and the `last-reconciled` marker is written to HEAD.

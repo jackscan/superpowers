@@ -69,7 +69,7 @@ current structure; reconcile the design against it:
 `HEAD`:
 
 ```bash
-marker=$(grep -oP '(?<=last-reconciled: )[a-f0-9]+' docs/architecture.md | head -1)
+marker=$(grep -o 'last-reconciled: [a-f0-9]\+' docs/architecture.md | head -1 | cut -d' ' -f2)
 if [ -n "$marker" ]; then
   count=$(git rev-list --count "${marker}..HEAD" 2>/dev/null || echo "unknown")
   if [ "$count" != "0" ] && [ "$count" != "unknown" ]; then
@@ -127,7 +127,7 @@ commits made directly to the main branch and any other case where the doc has dr
 Without a design doc, scan `git log` since the last reconcile marker:
 
 ```bash
-marker=$(grep -oP '(?<=last-reconciled: )[a-f0-9]+' docs/architecture.md | head -1)
+marker=$(grep -o 'last-reconciled: [a-f0-9]\+' docs/architecture.md | head -1 | cut -d' ' -f2)
 if [ -n "$marker" ]; then
   git log --oneline "${marker}..HEAD"
 else
@@ -165,6 +165,8 @@ For each affected area:
   landed change in the scanned range.
 - **Idempotent:** re-running yields the same result. Treat "already applied" operations as
   no-ops, never duplicate entries.
+- **Trivial changes** (tests, docs, pure refactor with no structural impact) may no-op the
+  component map update — leave it untouched, optionally add a Done line or nothing.
 
 ### Guardrails
 
