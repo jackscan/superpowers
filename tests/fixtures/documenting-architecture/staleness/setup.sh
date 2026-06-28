@@ -15,7 +15,7 @@ OLD_HASH=$(git rev-parse HEAD)
 sed -i "s/OLDER/$OLD_HASH/" docs/architecture.md
 git add -A && git commit -qm "set marker"
 
-# Two commits since marker -> stale by 2
+# Three commits since marker (set marker + change 1 + change 2) -> stale by 3
 echo "x" >> README.md && git add -A && git commit -qm "change 1"
 echo "y" >> README.md && git add -A && git commit -qm "change 2"
 
