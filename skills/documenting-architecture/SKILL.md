@@ -157,6 +157,8 @@ For each affected area:
   changed. Preserve component blocks not touched by this change.
 - **New or changed interactions** -> update Key interactions. Add a new flow or revise an
   existing one; do not restate unchanged flows.
+- **Tech stack & constraints** -> update if the change introduces a new language, framework,
+  or external dependency, or changes a non-negotiable constraint. Otherwise leave unchanged.
 - **Roadmap** -> move the matching `### In progress` (or `### Planned`) entry to `### Done`
   with a ref (the commit hash, or the design-doc path if no commit yet). If no prior entry
   exists, add a fresh Done line — do not fail. For the on-demand path, one Done line per
