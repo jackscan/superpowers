@@ -240,8 +240,7 @@ git worktree prune  # Self-healing: clean up any stale registrations
 - `cd` to main repo root before worktree removal
 - Run `git worktree prune` after removal
 
-<!-- superpowers-specs:begin -->
-## Spec Sync (companion plugin: superpowers-specs)
+## Spec Sync
 
 After Step 1 (tests pass), and only when integrating the work — **Option 1 (merge locally)**
 or **Option 2 (push and create a PR)** — check for delta specs under
@@ -250,4 +249,3 @@ name). If any exist, invoke the `syncing-specs` skill BEFORE performing the merg
 the merged canonical specs and archived deltas are committed and ship with the code.
 
 Skip this for Option 3 (keep as-is) and Option 4 (discard).
-<!-- superpowers-specs:end -->
