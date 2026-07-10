@@ -11,13 +11,5 @@
     "debugging",
     "collaboration",
     "workflow"
-  ],
-  "pi": {
-    "extensions": [
-      "./.pi/extensions/superpowers.ts"
-    ],
-    "skills": [
-      "./skills"
-    ]
-  }
+  ]
 }
