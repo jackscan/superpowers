@@ -1,6 +1,6 @@
 ---
 name: preparing-workspace
-description: Use when starting feature work or before executing an implementation plan - verifies the workspace is clean (no uncommitted or untracked changes) and the test suite passes at baseline
+description: Use when starting feature work or before executing an implementation plan
 ---
 
 # Preparing Workspace

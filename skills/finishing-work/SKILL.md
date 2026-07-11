@@ -1,6 +1,6 @@
 ---
 name: finishing-work
-description: Use when implementation is complete and all tasks are done - runs final checks (tests, lint, typecheck), syncs spec deltas, and verifies all changes are committed
+description: Use when implementation is complete and all tasks are done
 ---
 
 # Finishing Work
