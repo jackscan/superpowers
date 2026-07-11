@@ -134,8 +134,9 @@ your path and complete them in order.
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+8. **User reviews written spec** — ask user to review the spec file before proceeding; revise if they request changes, re-running the self-review each time
+9. **Offer ADRs for significant architectural decisions** — once the spec is approved by the user, when a decision is hard to reverse, surprising, and a real trade-off (see `superpowers:writing-adrs`), AND the project already has an ADR directory, invoke that skill to draft a new ADR. Skip if the decision is trivial, reversible, or the project has no ADR convention — mention in the design doc instead.
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -156,6 +157,8 @@ digraph brainstorming {
     "Write design doc" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
+    "Offer ADRs?\n(significant + repo has ADR dir)" [shape=diamond];
+    "Invoke writing-adrs skill" [shape=box];
     "Invoke writing-plans skill" [shape=doublecircle];
     "Hidden complexity? Upgrade path" [shape=box];
 
@@ -177,14 +180,18 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
+    "User reviews spec?" -> "Offer ADRs?\n(significant + repo has ADR dir)" [label="approved"];
+    "Offer ADRs?\n(significant + repo has ADR dir)" -> "Invoke writing-adrs skill" [label="yes"];
+    "Offer ADRs?\n(significant + repo has ADR dir)" -> "Invoke writing-plans skill" [label="no"];
+    "Invoke writing-adrs skill" -> "Invoke writing-plans skill";
 }
 ```
 
-**Terminal states are path-bound.** Architectural: the ONLY skill you
-invoke after brainstorming is writing-plans — never frontend-design,
-mcp-builder, or any other implementation skill. Bounded: after
-approval, implementation proceeds directly through the normal
+**Terminal states are path-bound.** Architectural: the ONLY skills you
+invoke after brainstorming are writing-adrs (optionally, for significant
+decisions — see the checklist) and then writing-plans — never
+frontend-design, mcp-builder, or any other implementation skill. Bounded:
+after approval, implementation proceeds directly through the normal
 development workflow; no plan document. Spike: the terminal state is a
 reported recommendation.
 
