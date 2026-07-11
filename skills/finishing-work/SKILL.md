@@ -25,9 +25,7 @@ Run the project's checks — tests plus any lint, typecheck, or build checks the
 
 ## Step 2: Sync Spec Deltas
 
-Resolve the feature name `<feature>` by discovering the change directory — do not use the
-git branch (branching is not part of this workflow, so the branch name is not a reliable
-feature identifier):
+Resolve the feature name `<feature>` by discovering the change directory:
 
 1. List the directories under `docs/specs/changes/`, ignoring `archive/`:
 

@@ -27,9 +27,7 @@ Before proposing a design, ground yourself in the documented current behavior:
 Write a **behavior-only** delta describing how this change alters the capabilities:
 
 1. Determine the feature name `<feature>` = the kebab-case brainstorming topic (or a name
-   agreed with the user). Do not derive it from the git branch — branching is not part of
-   this workflow, so the branch name is not a reliable feature identifier. If
-   `docs/specs/changes/<feature>/` already exists for this change, reuse it.
+   agreed with the user). If `docs/specs/changes/<feature>/` already exists for this change, reuse it.
 2. For each affected capability, create/append
    `docs/specs/changes/<feature>/specs/<capability>/spec.md`. Reuse an existing capability
    name when one fits; coin a new kebab-case name otherwise. Create `docs/specs/` and the

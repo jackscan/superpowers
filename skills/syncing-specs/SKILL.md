@@ -21,8 +21,6 @@ requirement). It MUST be idempotent — running it twice produces the same resul
 - If no feature name is given, discover it: list `docs/specs/changes/` (ignore `archive/`).
   Exactly one → use it. Multiple → present them and ask the user to choose. None → report
   "No delta specs to sync" and stop.
-- Do not derive `<feature>` from the git branch — branching is not part of this workflow,
-  so the branch is not a reliable feature identifier.
 
 ## Steps
 
