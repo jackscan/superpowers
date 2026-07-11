@@ -17,9 +17,10 @@ Load plan, review critically, execute all tasks, report when complete.
 
 ### Step 1: Load and Review Plan
 1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create todos for the plan items and proceed
+2. If a handoff doc exists alongside the plan (same path with `-handoff` suffix), read it before reviewing. The handoff doc's Key Decisions, Rejected Alternatives, and Planning Insights sections provide context for judgment calls when the plan hits blockers or needs adaptation.
+3. Review critically - identify any questions or concerns about the plan
+4. If concerns: Raise them with your human partner before starting
+5. If no concerns: Create todos for the plan items and proceed
 
 ### Step 2: Execute Tasks
 

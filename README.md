@@ -49,15 +49,17 @@ OpenCode uses its own plugin install.
 
 2. **preparing-workspace** - Activates before starting work. Verifies workspace is clean (no uncommitted or untracked changes) and test suite passes at baseline.
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps. Generates a handoff document with key decisions and planning insights.
 
 4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
 
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
+5. **plan-execution-entry** - In a new session, reads the handoff and plan, asks the user which execution skill to use, and loads it.
 
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
+6. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 
-7. **finishing-work** - Activates when tasks complete. Runs final checks (tests, lint, typecheck), syncs spec deltas, verifies all changes are committed.
+7. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
+
+8. **finishing-work** - Activates when tasks complete. Runs final checks (tests, lint, typecheck), syncs spec deltas, verifies all changes are committed.
 
 **The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
 
@@ -75,6 +77,7 @@ OpenCode uses its own plugin install.
 **Collaboration** 
 - **brainstorming** - Socratic design refinement
 - **writing-plans** - Detailed implementation plans
+- **plan-execution-entry** - New-session entry point for plan execution
 - **executing-plans** - Batch execution with checkpoints
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
