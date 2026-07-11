@@ -147,22 +147,75 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
+## Handoff Document
+
+After the plan and self-review are complete, generate a handoff document as a temporary scratch file. This carries the "why" and "watch out for" context that the spec and plan don't capture — the planning orchestrator's distilled summary of what it learned, not a transcript.
+
+**Save to:** `.superpowers/execution-handoff.md` — a single, fixed, gitignored scratch path. This overwrites any previous handoff; exactly one handoff exists at a time. `finishing-work` deletes it when execution completes. It never enters git (`.superpowers/` is already in `.gitignore`).
+
+**Template:**
+
+````markdown
+# [Feature Name] — Planning Handoff
+
+> This document bridges planning and execution. Read this first, then the plan. It is a temporary scratch file, deleted when execution completes.
+
+**Plan:** docs/superpowers/plans/YYYY-MM-DD-<feature>.md
+**Spec:** docs/superpowers/specs/YYYY-MM-DD-<feature>-design.md
+
+## Key Decisions
+
+[3-7 bullet points: the non-obvious choices made during planning and why.
+Each decision gets one line on what was chosen and one on why.]
+
+## Rejected Alternatives
+
+[2-5 entries: approaches considered and rejected, with a one-line reason.
+Prevents the execution session from re-deriving paths already ruled out.]
+
+## Planning Insights
+
+[Context the spec and plan don't capture: gotchas discovered during
+codebase exploration, fragile areas to watch, implicit assumptions,
+environment quirks. Prose, not steps.]
+
+## Execution
+
+Two execution skills are available — choose one and start a new session:
+
+1. **superpowers:subagent-driven-development** — dispatches a fresh
+   subagent per task with review between tasks. Best for plans with
+   mostly independent tasks.
+2. **superpowers:executing-plans** — executes tasks inline in the
+   current session with checkpoints.
+
+Start a new session and give it this prompt:
+"Load the plan-execution-entry skill."
+````
+
+**Generation:** Distill this from the planning conversation. The handoff doc is always written after the plan is finalized. If the plan is revised, regenerate the handoff doc — writing to the fixed scratch path always overwrites the previous handoff.
+
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
+After saving the plan and handoff document, present the handoff message:
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
+**"Plan and handoff document saved:**
+- Plan: `docs/superpowers/plans/<filename>.md`
+- Handoff (scratch): `.superpowers/execution-handoff.md`
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**Recommended: Start a new session for execution.** The planning phase
+accumulated context that the execution orchestrator doesn't need. A
+fresh session starts with just the plan, spec, and handoff context.
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+Start a new session and give it this prompt:
+`Load the plan-execution-entry skill.`
 
-**Which approach?"**
+The entry skill reads `.superpowers/execution-handoff.md`, which
+points at the plan and spec, asks you which execution approach to use,
+and loads the chosen skill. The execution skill, via `finishing-work`,
+deletes the scratch handoff when work completes — the handoff never
+persists in the repo.
 
-**If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
-- Fresh subagent per task + two-stage review
-
-**If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review
+**Alternatively**, you can stay in this session and load an execution
+skill directly — but your context will carry the planning
+conversation, which costs tokens without benefiting execution."
