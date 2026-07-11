@@ -176,29 +176,67 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
-## Execution Handoff
+## Handoff Document
 
 After saving and self-reviewing the plan, link it for your human partner
-to read. If they have already explicitly supplied an execution method, ask
-them to review the plan and confirm it captures what they want; wait for that
-review before implementation, then use the preserved method. Otherwise, ask
-them to review the plan and choose an execution method before implementation.
+to read. Ask them to review the plan and confirm it captures what they want.
 
-**When no execution method has already been supplied:**
+When the human partner has reviewed and approved the plan, proceed to generate the handoff document.
+Generate a handoff document as a temporary scratch file. This carries the "why" and "watch out for" context that the spec and plan don't capture — the planning orchestrator's distilled summary of what it learned, not a transcript.
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Please review the plan. Which execution approach would you prefer?**
+**Save to:** `.superpowers/execution-handoff.md` — a single, fixed, gitignored scratch path. This overwrites any previous handoff; exactly one handoff exists at a time. `finishing-work` deletes it when execution completes. It never enters git (`.superpowers/` is already in `.gitignore`).
+
+**Template:**
+
+````markdown
+# [Feature Name] — Planning Handoff
+
+> This document bridges planning and execution. Read this first, then the plan. It is a temporary scratch file, deleted when execution completes.
+
+**Plan:** docs/superpowers/plans/YYYY-MM-DD-<feature>.md
+**Spec:** docs/superpowers/specs/YYYY-MM-DD-<feature>-design.md
+
+## Key Decisions
+
+[3-7 bullet points: the non-obvious choices made during planning and why.
+Each decision gets one line on what was chosen and one on why.]
+
+## Rejected Alternatives
+
+[2-5 entries: approaches considered and rejected, with a one-line reason.
+Prevents the execution session from re-deriving paths already ruled out.]
+
+## Planning Insights
+
+[Context the spec and plan don't capture: gotchas discovered during
+codebase exploration, fragile areas to watch, implicit assumptions,
+environment quirks. Prose, not steps.]
+
+## Execution
+
+Two execution skills are available — Ask the human partner which one to use:
+
+**"Which execution approach would you prefer?**
 
 - **Subagent-driven** - A fresh subagent implements each task and a fresh reviewer checks it before the next one starts, then a whole-branch review at the end. Most thorough; costs a fresh context per task and per review.
 - **Native** - I implement every task myself in this session, the way this harness runs work, then one fresh reviewer on the most capable model checks the whole branch. Cheapest and fastest; no independent review until the end. Runs well with a mid-tier session model, since the plan carries the design.
 
-**For this plan I recommend <one of the two>, because <one sentence from the plan: how much the tasks depend on each other's interfaces, how many there are, what a shipped mistake would cost>. Does the plan capture what you want, and which approach should we use?"**
+**For this plan I recommend <one of the two>, because <one sentence from the plan: how much the tasks depend on each other's interfaces, how many there are, what a shipped mistake would cost>. Which approach should we use?"**
+````
 
-**When an execution method has already been supplied:**
+**Generation:** Distill this from the planning conversation. The handoff doc is always written after the plan is finalized. If the plan is revised, regenerate the handoff doc — writing to the fixed scratch path always overwrites the previous handoff.
 
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Please review the plan. Does it capture what you want?"**
+## Execution Handoff
 
-**If Subagent-driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+After saving the plan and handoff document, present the handoff message:
 
-**If Native chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
+**"Plan and handoff document saved:**
+- Plan: `docs/superpowers/plans/<filename>.md`
+- Handoff (scratch): `.superpowers/execution-handoff.md`
+
+**Recommended: Start a new session for execution.** The planning phase
+accumulated context that the execution orchestrator doesn't need. A
+fresh session starts with just the plan, spec, and handoff context.
+
+Start a new session and give it this prompt:
+`Load the plan-execution-entry skill.`
