@@ -4,7 +4,7 @@
 
 **Goal:** Introduce a clean context break between the planning phase (brainstorming + writing-plans) and the execution phase (subagent-driven-development or executing-plans) by generating a handoff document and starting a fresh session for execution.
 
-**Architecture:** Three changes to the skill library. `writing-plans` gains a handoff-doc generation step and a revised handoff message. A new `plan-execution-entry` skill serves as the entry point for the new session — it discovers the handoff doc and plan, asks the user which execution skill to use, and loads it. `executing-plans` and `subagent-driven-development` gain a step to read the handoff doc alongside the plan. No plugin code changes.
+**Architecture:** Two changes to the skill library. `writing-plans` gains a handoff-doc generation step and a revised handoff message. A new `plan-execution-entry` skill serves as the entry point for the new session — it discovers the handoff doc and plan, reads the handoff, asks the user which execution skill to use, and loads it. The execution skills (`executing-plans`, `subagent-driven-development`) are unchanged — they read the plan as they do today. `plan-execution-entry` is the sole reader of the handoff doc. No plugin code changes.
 
 **Tech Stack:** Markdown skill files, YAML frontmatter.
 
@@ -16,7 +16,7 @@
 - The handoff doc is a Markdown file, not code. No new scripts or plugin tooling.
 - The execution skill decision (subagent-driven vs executing-plans) is made by the human user in the execution session, not by the planning session, the handoff doc, or auto-detection.
 - Starting a new session is recommended but not enforced. Users who prefer the old single-session flow can ignore the handoff message and load an execution skill directly.
-- Backward compatibility: existing plans without handoff docs work unchanged. The execution skills' handoff-reading step is a graceful no-op when no handoff doc exists.
+- Backward compatibility: existing plans without handoff docs work unchanged. `plan-execution-entry` falls back to asking for the plan path directly when no handoff doc is found.
 
 ## Motivation
 
@@ -128,7 +128,7 @@ conversation, which costs tokens without benefiting execution."
 **Frontmatter:**
 ```yaml
 name: plan-execution-entry
-description: Use at the start of a new session to execute a written implementation plan - reads the handoff and plan, asks the user which execution skill to use, then loads it
+description: Use when starting a new session to execute a written implementation plan - reads the handoff and plan, asks the user which execution skill to use, then loads it
 ```
 
 **Skill file:** `skills/plan-execution-entry/SKILL.md`
@@ -149,7 +149,7 @@ description: Use at the start of a new session to execute a written implementati
 
    Wait for the user's choice. Do not auto-select. Do not recommend one over the other.
 
-4. **Load the chosen skill.** Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan (and handoff doc if present) as part of its normal step 1.
+4. **Load the chosen skill.** Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan as part of its normal step 1. (The handoff doc's planning context was already consumed in Step 2; execution skills do not re-read it.)
 
 **Does NOT do:**
 - Does not execute any tasks itself.
@@ -159,19 +159,13 @@ description: Use at the start of a new session to execute a written implementati
 
 **Announce at start:** "I'm using the plan-execution-entry skill to set up execution."
 
-### 4. `executing-plans` and `subagent-driven-development` — Read the Handoff
+### 4. Execution Skills — Unchanged
 
-Both skills' "Step 1: Load and Review Plan" gets a small addition:
+`executing-plans` and `subagent-driven-development` are **not modified** by this design. They read the plan as they do today. The handoff doc is read only by `plan-execution-entry` (Step 2), whose planning context is consumed at routing time and not re-read by the execution skill it loads.
 
-**`executing-plans` (Step 1, currently lines 18-23):**
+Rationale: the handoff doc exists to carry planning context across a session break. The entry skill is the bridge. Duplicating the read in the execution skills adds steps that the primary (entry-skill) path doesn't need.
 
-Add after "Read plan file":
-> If a handoff doc exists alongside the plan (same path with `-handoff` suffix), read it before reviewing. The handoff doc's Key Decisions, Rejected Alternatives, and Planning Insights sections provide context for judgment calls when the plan hits blockers or needs adaptation.
-
-**`subagent-driven-development` (before "Read plan, note context and global constraints, create todos"):**
-
-Add:
-> If a handoff doc exists alongside the plan (same path with `-handoff` suffix), read it before starting. The handoff doc's Key Decisions, Rejected Alternatives, and Planning Insights sections provide context for judgment calls when the plan hits blockers or needs adaptation. Note any insights relevant to the tasks you're about to dispatch.
+**Trade-off:** users who bypass `plan-execution-entry` (loading an execution skill directly, or staying in the planning session) are responsible for reading the handoff doc themselves if they want its planning context. The entry skill is a convenience, not a gate — but it's the convenience that makes the handoff doc useful.
 
 ### 5. Reference Updates
 
@@ -179,19 +173,17 @@ Add:
 |------|---------|
 | `README.md` | Add `plan-execution-entry` to the skills listing with its one-line description. Update the workflow description to mention the handoff doc generation and new-session recommendation. |
 | `skills/writing-plans/SKILL.md` | Add "Handoff Document" step after Self-Review. Replace "Execution Handoff" section with the new handoff message. |
-| `skills/executing-plans/SKILL.md` | Add handoff-doc reading instruction to Step 1. |
-| `skills/subagent-driven-development/SKILL.md` | Add handoff-doc reading instruction before task dispatch begins. |
 | `skills/plan-execution-entry/SKILL.md` | Create (new skill). |
 
 ## Edge Cases
 
-**Missing handoff doc:** The execution skills' "read the handoff if it exists" check is a graceful no-op when no handoff doc is present. Existing plans written before this change still work — the execution skills just read the plan as they do today. `plan-execution-entry` falls back to asking for the plan path directly.
+**Missing handoff doc:** `plan-execution-entry` falls back to asking the user for the plan path directly and proceeds to present execution options. Existing plans written before this change still work — the execution skills read the plan as they do today.
 
 **Multiple handoff docs:** `plan-execution-entry` lists all `*-handoff.md` files with their timestamps and asks the user which one to use.
 
-**User bypasses the entry skill:** A user who knows which execution skill they want can load `subagent-driven-development` or `executing-plans` directly and point at the plan. This is fully supported — the entry skill is a convenience, not a gate.
+**User bypasses the entry skill:** A user who knows which execution skill they want can load `subagent-driven-development` or `executing-plans` directly and point at the plan. This is fully supported — the entry skill is a convenience, not a gate. The handoff doc's planning context is not read in this flow; the user is responsible for reading it themselves if they want it.
 
-**User stays in the same session:** A user who prefers the old flow can ignore the handoff message and load an execution skill directly. The handoff doc is generated but unused. No penalty for not starting a new session — the context cost is the user's to bear.
+**User stays in the same session:** A user who prefers the old flow can ignore the handoff message and load an execution skill directly. The handoff doc is generated but not read. No penalty for not starting a new session — the context cost is the user's to bear.
 
 **Handoff doc goes stale:** If the plan is revised after the handoff doc is written (e.g., the user iterates on the plan in the planning session), `writing-plans` regenerates the handoff doc as part of any plan revision. The handoff doc is always the last thing written.
 
@@ -203,8 +195,7 @@ This change is purely skill-instruction changes — no plugin code. Two testing 
 
 2. **Skill behavior evals (thorough but slow):** Scenarios in `evals/scenarios/` that verify:
    - `writing-plans` generates a handoff doc with all four sections after the plan
-   - `plan-execution-entry` discovers the handoff, presents both options, and loads the chosen skill
-   - `executing-plans`/`subagent-driven-development` reads the handoff doc at step 1
+   - `plan-execution-entry` discovers the handoff, reads it, presents both options, and loads the chosen skill
 
 No new plugin code means no new bash/node tests in `tests/`.
 
@@ -214,6 +205,4 @@ No new plugin code means no new bash/node tests in `tests/`.
 |------|--------|
 | `skills/plan-execution-entry/SKILL.md` | Create |
 | `skills/writing-plans/SKILL.md` | Edit (add handoff doc step, replace execution handoff section) |
-| `skills/executing-plans/SKILL.md` | Edit (add handoff-doc reading to Step 1) |
-| `skills/subagent-driven-development/SKILL.md` | Edit (add handoff-doc reading before task dispatch) |
 | `README.md` | Edit (add new skill to listing, update workflow description) |
