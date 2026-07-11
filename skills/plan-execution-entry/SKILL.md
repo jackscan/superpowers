@@ -20,7 +20,7 @@ The entry point for a new session executing a plan. Discovers the handoff doc an
 If the user's prompt includes a plan path (e.g., `docs/superpowers/plans/YYYY-MM-DD-feature.md`), look for the handoff doc at the same path with `-handoff` suffix (e.g., `docs/superpowers/plans/YYYY-MM-DD-feature-handoff.md`).
 
 - **Handoff doc found:** Use it. Continue to Step 2.
-- **Handoff doc not found at that path:** Ask the user for the plan path. Continue to Step 3 (legacy flow — no handoff doc).
+- **Handoff doc not found at that path:** Proceed to Step 3 using the plan path the user provided (legacy flow — no handoff doc).
 - **No plan path in the prompt:** Scan `docs/superpowers/plans/` for `*-handoff.md` files.
   - Exactly one found: use it.
   - Multiple found: list them with timestamps and ask the user which one to use.

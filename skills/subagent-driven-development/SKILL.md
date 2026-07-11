@@ -60,14 +60,14 @@ digraph process {
         "Mark task complete in todo list and progress ledger" [shape=box];
     }
 
-    "Read plan, note context and global constraints, create todos" [shape=box];
     "Read handoff doc if it exists alongside plan" [shape=box];
+    "Read plan, note context and global constraints, create todos" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" [shape=box];
     "Use superpowers:finishing-work" [shape=box style=filled fillcolor=lightgreen];
 
-    "Read plan, note context and global constraints, create todos" -> "Read handoff doc if it exists alongside plan";
-    "Read handoff doc if it exists alongside plan" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+    "Read handoff doc if it exists alongside plan" -> "Read plan, note context and global constraints, create todos";
+    "Read plan, note context and global constraints, create todos" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -100,7 +100,7 @@ conflicts that only emerge from implementation.
 
 ## Handoff Document
 
-After reading the plan and before dispatching the first implementer, check for a handoff doc alongside the plan (same path with `-handoff` suffix). If it exists, read it. The handoff doc's Key Decisions, Rejected Alternatives, and Planning Insights sections provide context for judgment calls when the plan hits blockers or needs adaptation. Note any insights relevant to the tasks you're about to dispatch.
+Before reading the plan, check for a handoff doc alongside the plan (same path with `-handoff` suffix). If it exists, read it first — it points to the plan and carries planning context for judgment calls during execution. Then read the plan and proceed.
 
 ## Model Selection
 
