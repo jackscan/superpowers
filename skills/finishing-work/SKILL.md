@@ -25,17 +25,29 @@ Run the project's checks — tests plus any lint, typecheck, or build checks the
 
 ## Step 2: Sync Spec Deltas
 
-Check for delta specs:
+Resolve the feature name `<feature>` by discovering the change directory — do not use the
+git branch (branching is not part of this workflow, so the branch name is not a reliable
+feature identifier):
 
-```bash
-git rev-parse --abbrev-ref HEAD
-```
+1. List the directories under `docs/specs/changes/`, ignoring `archive/`:
 
-Use the branch name as `<feature>`. List `docs/specs/changes/<feature>/specs/*/spec.md`.
+   ```bash
+   ls docs/specs/changes/ 2>/dev/null
+   ```
 
-**If deltas exist:** Invoke the `superpowers:syncing-specs` skill to merge them into canonical specs and archive the deltas.
+2. **None (or `docs/specs/` does not exist):** Skip silently. This is a no-op unless the
+   project has opted into living specs.
+3. **Exactly one directory:** `<feature>` = that name. Confirm deltas exist by listing
+   `docs/specs/changes/<feature>/specs/*/spec.md`.
+4. **Multiple directories:** use the plan hint to auto-select. The executed plan lives under
+   `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`; the `<feature-name>` portion of
+   its filename is the feature name. If exactly one change directory matches that name, use
+   it. Otherwise, present the change directories and ask the user which to sync.
 
-**If `docs/specs/` does not exist or no deltas are found:** Skip silently. This is a no-op unless the project has opted into living specs.
+**If deltas exist:** Invoke the `superpowers:syncing-specs` skill, passing it `<feature>`,
+to merge them into canonical specs and archive the deltas.
+
+**If no deltas are found:** Skip silently.
 
 ## Step 3: Verify Commit Completeness
 

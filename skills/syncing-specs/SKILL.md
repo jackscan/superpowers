@@ -1,6 +1,6 @@
 ---
 name: syncing-specs
-description: Use at finishing time (merge or PR) to merge a feature's delta specs under docs/specs/changes/<feature>/ into the canonical specs under docs/specs/, then archive the deltas. Agent-driven, idempotent. Ported from OpenSpec.
+description: Use at finishing time to merge a feature's delta specs under docs/specs/changes/<feature>/ into the canonical specs under docs/specs/, then archive the deltas. Agent-driven, idempotent. Ported from OpenSpec.
 ---
 
 # Syncing Delta Specs into Canonical Specs
@@ -15,11 +15,14 @@ requirement). It MUST be idempotent — running it twice produces the same resul
 
 ## Inputs
 
-- **Feature name** `<feature>` — the git branch name, or the kebab change name. The deltas
-  live under `docs/specs/changes/<feature>/specs/`.
-- If no feature name is given, infer it from the current branch
-  (`git rev-parse --abbrev-ref HEAD`); if that is ambiguous, list
-  `docs/specs/changes/*/` and ask the user to choose.
+- **Feature name** `<feature>` — the name of the change directory under
+  `docs/specs/changes/`. The deltas live under `docs/specs/changes/<feature>/specs/`.
+- If a feature name is passed by the invoking skill (e.g. `finishing-work`), use it.
+- If no feature name is given, discover it: list `docs/specs/changes/` (ignore `archive/`).
+  Exactly one → use it. Multiple → present them and ask the user to choose. None → report
+  "No delta specs to sync" and stop.
+- Do not derive `<feature>` from the git branch — branching is not part of this workflow,
+  so the branch is not a reliable feature identifier.
 
 ## Steps
 
