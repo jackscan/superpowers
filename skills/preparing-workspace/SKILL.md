@@ -34,16 +34,9 @@ After the user chooses and the action runs, re-run `git status --porcelain` to v
 
 ## Step 2: Run Baseline Tests
 
-Auto-detect the test command:
+Run the project's test suite (e.g. `npm test`, `cargo test`, `pytest`, `go test ./...`) to confirm the workspace starts clean.
 
-| Project marker | Command |
-|----------------|---------|
-| `package.json` with `scripts.test` | `npm test` |
-| `Cargo.toml` | `cargo test` |
-| `pyproject.toml` or `requirements.txt` | `pytest` |
-| `go.mod` | `go test ./...` |
-
-**No recognized project file:** Skip silently. Report "No test suite detected."
+**No tests found:** Skip. Report "No test suite detected."
 
 **If tests fail:** Report the failures and ask whether to proceed or investigate. Do not assume baseline is green. Do not proceed without explicit consent.
 

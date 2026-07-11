@@ -15,43 +15,13 @@ After implementation is complete, run final checks, sync spec deltas, and verify
 
 ## Step 1: Run Final Checks
 
-Auto-detect and run checks from the project:
+Run the project's checks — tests plus any lint, typecheck, or build checks the project defines (e.g. `npm test`, `cargo test`, `pytest`, `go test ./...`).
 
-### Tests
-
-| Project marker | Command |
-|----------------|---------|
-| `package.json` with `scripts.test` | `npm test` |
-| `Cargo.toml` | `cargo test` |
-| `pyproject.toml` or `requirements.txt` | `pytest` |
-| `go.mod` | `go test ./...` |
-
-If no test runner is detected, skip silently.
-
-### Lint
-
-Run if any of these apply:
-
-| Marker | Command |
-|--------|---------|
-| `package.json` with `scripts.lint` | `npm run lint` |
-| `.eslintrc*` or `eslint.config.*` exists | `npx eslint .` |
-| `ruff.toml` exists, or `pyproject.toml` contains `[tool.ruff]` | `ruff check` |
-| `.golangci.yml` or `.golangci.yaml` exists | `golangci-lint run` |
-
-### Typecheck
-
-Run if any of these apply:
-
-| Marker | Command |
-|--------|---------|
-| `package.json` with `scripts.typecheck` | `npm run typecheck` |
-| `tsconfig.json` exists | `npx tsc --noEmit` |
-| `mypy.ini` exists, or `pyproject.toml` contains `[tool.mypy]` | `mypy .` |
+**If the project has no checks:** Skip and continue to Step 2.
 
 **If any check fails:** Report the failures and stop. Do not declare work complete.
 
-**If all detected checks pass:** Continue to Step 2.
+**If all checks pass:** Continue to Step 2.
 
 ## Step 2: Sync Spec Deltas
 
@@ -90,8 +60,8 @@ Work complete.
 
 | Situation | Action |
 |-----------|--------|
-| Test/lint/typecheck fails | Report failures, stop |
-| No test runner detected | Skip tests silently |
+| Any check fails | Report failures, stop |
+| No checks defined | Skip, continue to Step 2 |
 | Spec deltas exist | Invoke syncing-specs |
 | No spec deltas | Skip spec sync silently |
 | Dirty tree | Report, ask to commit/stash |
@@ -123,6 +93,6 @@ Work complete.
 - Merge, push, create PRs, delete branches, or clean up worktrees (this skill does not do that)
 
 **Always:**
-- Run all detected checks and verify output
+- Run all project checks and verify output
 - Check for spec deltas before declaring done
 - Verify `git status --porcelain` is empty
