@@ -1,6 +1,6 @@
 ---
 name: plan-execution-entry
-description: Use at the start of a new session to execute a written implementation plan - reads the handoff and plan, asks the user which execution skill to use, then loads it
+description: Use when starting a new session to execute a written implementation plan - reads the handoff and plan, asks the user which execution skill to use, then loads it
 ---
 
 # Plan Execution Entry
