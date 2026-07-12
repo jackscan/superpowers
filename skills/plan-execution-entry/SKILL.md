@@ -17,14 +17,12 @@ The entry point for a new session executing a plan. Discovers the handoff doc an
 
 ### Step 1: Find the Handoff Doc
 
-If the user's prompt includes a plan path (e.g., `docs/superpowers/plans/YYYY-MM-DD-feature.md`), look for the handoff doc at the same path with `-handoff` suffix (e.g., `docs/superpowers/plans/YYYY-MM-DD-feature-handoff.md`).
+Read `.superpowers/execution-handoff.md` — the single, fixed, gitignored scratch path where `writing-plans` always writes the most recent handoff.
 
-- **Handoff doc found:** Use it. Continue to Step 2.
-- **Handoff doc not found at that path:** Proceed to Step 3 using the plan path the user provided (legacy flow — no handoff doc).
-- **No plan path in the prompt:** Scan `docs/superpowers/plans/` for `*-handoff.md` files.
-  - Exactly one found: use it.
-  - Multiple found: list them with timestamps and ask the user which one to use.
-  - None found: ask the user for the plan path. Continue to Step 3 (legacy flow — no handoff doc).
+- **Handoff doc found:** Extract the `**Plan:**` and `**Spec:**` paths from its header. Continue to Step 2.
+- **Handoff doc not found:** Ask the user for the plan path. Continue to Step 3 (legacy fallback — no handoff context).
+
+There is exactly one handoff at any time (a new plan overwrites the previous one), so there is never a list to choose from and no name for the user to remember.
 
 ### Step 2: Read the Handoff Doc and Plan
 
@@ -44,7 +42,7 @@ Ask the user which execution skill to use:
 
 ### Step 4: Load the Chosen Skill
 
-Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan as part of its normal step 1.
+Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan as part of its normal step 1. The handoff doc persists at `.superpowers/execution-handoff.md` through execution and is deleted by `finishing-work` when work completes; this skill does not delete it.
 
 ## Red Flags
 
