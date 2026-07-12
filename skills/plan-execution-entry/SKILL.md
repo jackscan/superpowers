@@ -37,40 +37,14 @@ Summarize for the user:
 
 ### Step 3: Present Execution Options
 
-Show the two execution options to the user:
+Ask the user which execution skill to use:
 
-> Two execution skills are available:
-> 1. **subagent-driven-development** — fresh subagent per task, review between tasks (best for mostly independent tasks)
-> 2. **executing-plans** — inline execution with checkpoints
->
-> Which would you like to use?
-
-Wait for the user's choice. Do not auto-select. Do not recommend one over the other.
+1. **subagent-driven-development** — fresh subagent per task, review between tasks (best for mostly independent tasks)
+2. **executing-plans** — inline execution with checkpoints
 
 ### Step 4: Load the Chosen Skill
 
-Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan (and handoff doc if present) as part of its normal step 1.
-
-## Does NOT Do
-
-- Does not execute any tasks itself.
-- Does not choose the execution skill for the user.
-- Does not modify the plan or handoff doc.
-- Does not dispatch subagents.
-
-## Common Mistakes
-
-### Auto-selecting an execution skill
-- **Problem:** The user should decide based on their environment and preferences
-- **Fix:** Present both options neutrally and wait for the user's choice
-
-### Skipping the handoff doc
-- **Problem:** The handoff doc carries planning context that helps with judgment calls during execution
-- **Fix:** Always read the handoff doc when it exists before presenting options
-
-### Reading the plan before the handoff doc
-- **Problem:** The handoff doc points to the plan and spec; reading it first gives context for the plan
-- **Fix:** Read handoff doc first, then plan
+Invoke the chosen skill via the `skill` tool. The chosen skill takes over from here — it reads the plan as part of its normal step 1.
 
 ## Red Flags
 
