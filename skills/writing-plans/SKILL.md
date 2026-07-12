@@ -155,16 +155,16 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 ## Handoff Document
 
-After the plan and self-review are complete, generate a handoff document alongside the plan. This carries the "why" and "watch out for" context that the spec and plan don't capture — the planning orchestrator's distilled summary of what it learned, not a transcript.
+After the plan and self-review are complete, generate a handoff document as a temporary scratch file. This carries the "why" and "watch out for" context that the spec and plan don't capture — the planning orchestrator's distilled summary of what it learned, not a transcript.
 
-**Save to:** `docs/superpowers/plans/YYYY-MM-DD-<feature>-handoff.md` (same naming convention as the plan, with `-handoff` suffix).
+**Save to:** `.superpowers/execution-handoff.md` — a single, fixed, gitignored scratch path. This overwrites any previous handoff; exactly one handoff exists at a time. `finishing-work` deletes it when execution completes. It never enters git (`.superpowers/` is already in `.gitignore`).
 
 **Template:**
 
 ````markdown
 # [Feature Name] — Planning Handoff
 
-> This document bridges planning and execution. Read this first, then the plan.
+> This document bridges planning and execution. Read this first, then the plan. It is a temporary scratch file, deleted when execution completes.
 
 **Plan:** docs/superpowers/plans/YYYY-MM-DD-<feature>.md
 **Spec:** docs/superpowers/specs/YYYY-MM-DD-<feature>-design.md
@@ -195,12 +195,11 @@ Two execution skills are available — choose one and start a new session:
 2. **superpowers:executing-plans** — executes tasks inline in the
    current session with checkpoints.
 
-Start a new session and give it a prompt like:
-"Read the handoff at [path]. I want to use [chosen skill] to execute
-the plan at [plan path]."
+Start a new session and give it this prompt:
+"Load the plan-execution-entry skill."
 ````
 
-**Generation:** Distill this from the planning conversation. The handoff doc is always written after the plan is finalized. If the plan is revised, regenerate the handoff doc.
+**Generation:** Distill this from the planning conversation. The handoff doc is always written after the plan is finalized. If the plan is revised, regenerate the handoff doc — writing to the fixed scratch path always overwrites the previous handoff.
 
 ## Execution Handoff
 
@@ -208,18 +207,20 @@ After saving the plan and handoff document, present the handoff message:
 
 **"Plan and handoff document saved:**
 - Plan: `docs/superpowers/plans/<filename>.md`
-- Handoff: `docs/superpowers/plans/<filename>-handoff.md`
+- Handoff (scratch): `.superpowers/execution-handoff.md`
 
 **Recommended: Start a new session for execution.** The planning phase
 accumulated context that the execution orchestrator doesn't need. A
 fresh session starts with just the plan, spec, and handoff context.
 
 Start a new session and give it this prompt:
-`Load the plan-execution-entry skill and execute the plan at
-docs/superpowers/plans/<filename>.md`
+`Load the plan-execution-entry skill.`
 
-The entry skill will read the handoff, ask you which execution
-approach to use, and load the chosen skill.
+The entry skill reads `.superpowers/execution-handoff.md`, which
+points at the plan and spec, asks you which execution approach to use,
+and loads the chosen skill. The execution skill, via `finishing-work`,
+deletes the scratch handoff when work completes — the handoff never
+persists in the repo.
 
 **Alternatively**, you can stay in this session and load an execution
 skill directly — but your context will carry the planning
