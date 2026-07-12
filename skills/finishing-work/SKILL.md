@@ -59,7 +59,17 @@ git status --porcelain
 
 **If output is empty:** All changes are committed. Continue.
 
-## Step 4: Report Complete
+## Step 4: Delete Scratch Handoff
+
+Once all checks pass and the tree is clean, delete the scratch handoff left by the planning phase:
+
+```bash
+rm -f .superpowers/execution-handoff.md
+```
+
+`rm -f` makes this idempotent: a no-op if no handoff exists (e.g. a project that never generated one, or executing a legacy plan without a handoff).
+
+## Step 5: Report Complete
 
 ```
 All checks pass, specs synced, all changes committed.
@@ -75,7 +85,7 @@ Work complete.
 | Spec deltas exist | Invoke syncing-specs |
 | No spec deltas | Skip spec sync silently |
 | Dirty tree | Report, ask to commit/stash |
-| Clean tree, all checks pass | Declare work complete |
+| Clean tree, all checks pass | Declare work complete, delete scratch handoff |
 
 ## Common Mistakes
 
@@ -106,3 +116,4 @@ Work complete.
 - Run all project checks and verify output
 - Check for spec deltas before declaring done
 - Verify `git status --porcelain` is empty
+- Delete `.superpowers/execution-handoff.md` as the final action once all checks pass and the tree is clean
