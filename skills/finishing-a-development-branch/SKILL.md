@@ -25,7 +25,33 @@ Tests failing (<N> failures). Must fix before completing:
 
 **If tests pass:** continue to Step 2.
 
-## Step 2: Detect Environment
+## Step 2: Sync Spec Deltas
+
+Resolve the feature name `<feature>` by discovering the change directory — do not use the
+git branch (branching is not part of this workflow, so the branch name is not a reliable
+feature identifier):
+
+1. List the directories under `docs/specs/changes/`, ignoring `archive/`:
+
+   ```bash
+   ls docs/specs/changes/ 2>/dev/null
+   ```
+
+2. **None (or `docs/specs/` does not exist):** Skip silently. This is a no-op unless the
+   project has opted into living specs.
+3. **Exactly one directory:** `<feature>` = that name. Confirm deltas exist by listing
+   `docs/specs/changes/<feature>/specs/*/spec.md`.
+4. **Multiple directories:** use the plan hint to auto-select. The executed plan lives under
+   `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`; the `<feature-name>` portion of
+   its filename is the feature name. If exactly one change directory matches that name, use
+   it. Otherwise, present the change directories and ask the user which to sync.
+
+**If deltas exist:** Invoke the `superpowers:syncing-specs` skill, passing it `<feature>`,
+to merge them into canonical specs and archive the deltas.
+
+**If no deltas are found:** Skip silently.
+
+## Step 3: Detect Environment
 
 ```bash
 GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
@@ -40,17 +66,17 @@ This determines which menu to show and how cleanup works:
 | State | Menu | Cleanup |
 |-------|------|---------|
 | `GIT_DIR == GIT_COMMON` (normal repo) | Standard 3 options | No worktree to clean up |
-| `GIT_DIR != GIT_COMMON`, named branch | Standard 3 options | Provenance-based (see Step 6) |
+| `GIT_DIR != GIT_COMMON`, named branch | Standard 3 options | Provenance-based (see Step 7) |
 | `GIT_DIR != GIT_COMMON`, detached HEAD | Reduced 2 options (no merge) | Externally managed — leave in place |
 
-## Step 3: Determine Base Branch
+## Step 4: Determine Base Branch
 
 The base branch is whatever this work forked from — usually named in the
 plan, the conversation, or the branch's upstream. If it is not already
 known, ask: "This branch split from <your best guess> - is that correct?"
 Confirm before merging: merging into the wrong base is expensive to undo.
 
-## Step 4: Present Options
+## Step 5: Present Options
 
 **Normal repo and named-branch worktree — present exactly these 3 options:**
 
@@ -81,7 +107,7 @@ human partner explicitly asking for it (see "If your human partner asks to
 discard the work" below). Wait for their answer; the integration decision
 is theirs.
 
-## Step 5: Execute Choice
+## Step 6: Execute Choice
 
 ### Option 1: Merge Locally
 
@@ -103,7 +129,7 @@ If tests fail on the merged result: stop, leave the worktree and branch in
 place, and investigate — nothing has been pushed, so the merge is local
 and recoverable.
 
-Once the merged result is green: clean up the worktree (Step 6), then
+Once the merged result is green: clean up the worktree (Step 7), then
 delete the branch:
 
 ```bash
@@ -150,13 +176,13 @@ MAIN_ROOT=$(git -C "$(git rev-parse --git-common-dir)/.." rev-parse --show-tople
 cd "$MAIN_ROOT"
 ```
 
-Then clean up the worktree (Step 6) and force-delete the branch:
+Then clean up the worktree (Step 7) and force-delete the branch:
 
 ```bash
 git branch -D <feature-branch>
 ```
 
-## Step 6: Cleanup Workspace
+## Step 7: Cleanup Workspace
 
 **Runs for Option 1 and confirmed discards.** Options 2 and 3 always
 preserve the worktree. Both callers have already changed directory to the
