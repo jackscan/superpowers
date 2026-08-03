@@ -288,6 +288,15 @@ A finding you decide not to fix is a ruling — `Final: Ruling: <finding> —
 <why the code stands> — <cost if wrong>` — and reaches your human partner
 in the rulings list. There is no second fix pass.
 
+## Sync Specs
+
+If the project uses living specs (`docs/specs/` exists), invoke the
+`superpowers:syncing-specs` skill to merge this feature's delta specs into
+the canonical specs and archive the deltas. Discover the feature name from
+`docs/specs/changes/` (ignore `archive/`): exactly one directory → use it;
+multiple → present them and ask your human partner to choose; none → skip
+silently. If `docs/specs/` does not exist, skip silently.
+
 ## Finish
 
 Before you delete anything, collect every ledger line containing

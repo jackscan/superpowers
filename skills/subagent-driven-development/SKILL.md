@@ -468,6 +468,15 @@ the four classes above stop you here. There is no second fix wave —
 residual load-bearing findings surface to your human partner when
 finishing-a-development-branch presents the options.
 
+## Sync Specs
+
+If the project uses living specs (`docs/specs/` exists), invoke the
+`superpowers:syncing-specs` skill to merge this feature's delta specs into
+the canonical specs and archive the deltas. Discover the feature name from
+`docs/specs/changes/` (ignore `archive/`): exactly one directory → use it;
+multiple → present them and ask your human partner to choose; none → skip
+silently. If `docs/specs/` does not exist, skip silently.
+
 ## Finish
 
 Before you delete anything, collect every ledger line containing `Ruling:` —
