@@ -200,6 +200,16 @@ Carry out the choice, then remove the worktree.
 **Otherwise:** The host environment owns this workspace — leave it in
 place. If your platform provides a workspace-exit tool, use it.
 
+## Step 8: Delete Scratch Handoff
+
+Once all checks pass and the tree is clean, delete the scratch handoff left by the planning phase:
+
+```bash
+rm -f .superpowers/execution-handoff.md
+```
+
+`rm -f` makes this idempotent: a no-op if no handoff exists (e.g. a project that never generated one, or executing a legacy plan without a handoff).
+
 ## Quick Reference
 
 | Option | Merge | Push | Keep Worktree | Cleanup Branch |
