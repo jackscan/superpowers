@@ -99,6 +99,19 @@ if check_skill writing-spec-deltas; then
   done
 fi
 
+# --- syncing-specs -----------------------------------------------------------
+if check_skill syncing-specs; then
+  SS="$REPO_ROOT/skills/syncing-specs/SKILL.md"
+  for anchor in "## Project Check" "## Resolve the Change" "## Reconcile" "## Validate" \
+    "## Merge (RENAMED → REMOVED → MODIFIED → ADDED)" "## New Capability" "## Retirement" \
+    "## Verify" "## Archive" "## Report and Commit" \
+    "## ADDED Requirements" "## MODIFIED Requirements" "## REMOVED Requirements" "## RENAMED Requirements" \
+    "#### Scenario:" "### Requirement:" "docs/specs/changes/archive/" \
+    "Reason" "Migration" "FROM:" "TO:" "scenario-loss" "Never create" "reserved"; do
+    contains "$SS" "$anchor" "syncing-specs carries anchor: $anchor"
+  done
+fi
+
 # --- house voice + leak checks ---------------------------------------------
 for skill in writing-spec-deltas syncing-specs; do
   md="$REPO_ROOT/skills/$skill/SKILL.md"
