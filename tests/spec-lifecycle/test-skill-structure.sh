@@ -87,6 +87,15 @@ contains() {
   fi
 }
 
+# contains_literal FILE NEEDLE LABEL — NEEDLE is matched as a fixed string
+contains_literal() {
+  if grep -qF -e "$2" "$1"; then
+    pass "$3"
+  else
+    fail "$3"
+  fi
+}
+
 echo "spec-lifecycle structure"
 
 # --- writing-spec-deltas ---------------------------------------------------
@@ -111,6 +120,43 @@ if check_skill syncing-specs; then
     contains "$SS" "$anchor" "syncing-specs carries anchor: $anchor"
   done
 fi
+
+# --- pointer blocks in the three edited skills + README ----------------------
+BS="$REPO_ROOT/skills/brainstorming/SKILL.md"
+SDD="$REPO_ROOT/skills/subagent-driven-development/SKILL.md"
+EP="$REPO_ROOT/skills/executing-plans/SKILL.md"
+
+contains "$BS" "superpowers:writing-spec-deltas" "brainstorming points at superpowers:writing-spec-deltas"
+contains "$SDD" "superpowers:syncing-specs" "subagent-driven-development points at superpowers:syncing-specs"
+contains "$EP" "superpowers:syncing-specs" "executing-plans points at superpowers:syncing-specs"
+contains "$BS" "and its spec delta, if the project maintains one" "brainstorming user review gate names the delta"
+
+bs_anchor="$(grep -n 'superpowers:writing-spec-deltas' "$BS" | head -1 | cut -d: -f1)"
+bs_selfreview="$(grep -n '\*\*Spec Self-Review:\*\*' "$BS" | head -1 | cut -d: -f1)"
+if [ -n "$bs_anchor" ] && [ -n "$bs_selfreview" ] && [ "$bs_anchor" -lt "$bs_selfreview" ]; then
+  pass "brainstorming pointer sits before the spec self-review"
+else
+  fail "brainstorming pointer sits before the spec self-review (anchor=$bs_anchor selfreview=$bs_selfreview)"
+fi
+
+pointer_between() {
+  md="$1"
+  skill="$2"
+  a="$(grep -n 'superpowers:syncing-specs' "$md" | head -1 | cut -d: -f1)"
+  f="$(grep -n '^## Final Review$' "$md" | head -1 | cut -d: -f1)"
+  n="$(grep -n '^## Finish$' "$md" | head -1 | cut -d: -f1)"
+  if [ -n "$a" ] && [ -n "$f" ] && [ -n "$n" ] && [ "$a" -gt "$f" ] && [ "$a" -lt "$n" ]; then
+    pass "$skill pointer sits between Final Review and Finish"
+  else
+    fail "$skill pointer sits between Final Review and Finish (anchor=$a final=$f finish=$n)"
+  fi
+}
+pointer_between "$SDD" "subagent-driven-development"
+pointer_between "$EP" "executing-plans"
+
+README="$REPO_ROOT/README.md"
+contains_literal "$README" '**writing-spec-deltas** - OpenSpec-style delta specs at design time' "README lists writing-spec-deltas"
+contains_literal "$README" '**syncing-specs** - Merge delta specs into canonical specs' "README lists syncing-specs"
 
 # --- house voice + leak checks ---------------------------------------------
 for skill in writing-spec-deltas syncing-specs; do

@@ -351,7 +351,9 @@ Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of t
 **Collaboration** 
 - **brainstorming** - Socratic design refinement
 - **writing-plans** - Detailed implementation plans
+- **writing-spec-deltas** - OpenSpec-style delta specs at design time (opt-in per project via `docs/specs/`)
 - **executing-plans** - Inline plan execution: one context, one final review
+- **syncing-specs** - Merge delta specs into canonical specs when implementation ends (opt-in per project via `docs/specs/`)
 - **dispatching-parallel-agents** - Concurrent subagent workflows
 - **requesting-code-review** - Pre-review checklist
 - **receiving-code-review** - Responding to feedback
