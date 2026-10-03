@@ -19,7 +19,7 @@ When genuinely unsure, ask your human partner before authoring anything.
 
 ## Inventory
 
-Read `docs/specs/**/spec.md`. The capability id for each file is the directory path relative to `docs/specs/` — e.g. `docs/specs/user-auth/spec.md` → capability `user-auth`.
+Read `docs/specs/**/spec.md` (excluding the `changes/` tree). The capability id for each file is the directory path relative to `docs/specs/` — e.g. `docs/specs/user-auth/spec.md` → capability `user-auth`.
 
 Two-pass read: skim the tree (headings and Purpose lines) to understand the landscape, then read only the capabilities this change plausibly touches.
 
@@ -67,7 +67,7 @@ Rules:
 
 1. Every `### Requirement:` sits under one of the four operation sections. A requirement outside all four is an error.
 2. Scenarios use exactly four hashtags (`#### Scenario:`). Three hashtags fail silently. Nothing inside a requirement block uses a heading — notes are list items or bold text only.
-3. Every ADDED/MODIFIED requirement has ≥1 scenario. REMOVED needs only Reason + Migration. RENAMED uses FROM/TO pairs.
+3. Every ADDED/MODIFIED requirement has ≥1 scenario. REMOVED needs only Reason + Migration. RENAMED uses FROM/TO pairs, each `FROM:` paired with exactly one `TO:`, in order.
 4. The same requirement name may not appear in two sections.
 5. Requirement text carries SHALL or MUST and stays ≤500 chars. MODIFIED blocks may not be trimmed to satisfy the limit.
 6. MODIFIED carries the **complete** replacement block — anything absent from the delta is lost at merge.
