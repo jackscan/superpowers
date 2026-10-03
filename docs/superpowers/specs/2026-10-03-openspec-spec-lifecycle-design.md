@@ -196,7 +196,7 @@ Body sections:
   of at least one capability: a new capability, or added/modified/removed
   user-visible behavior of an existing one. Pure refactors, tooling-only,
   docs-only → skip with a one-line note. Genuinely unsure → ask the partner.
-- **Inventory.** Read `docs/specs/**/spec.md`; capability id = directory path
+- **Inventory.** Read `docs/specs/**/spec.md` (excluding the `changes/` tree); capability id = directory path
   relative to `docs/specs/`. Two-pass read like OpenSpec's explore: skim the tree
   (heads and Purpose), then read in full only the capabilities this change plausibly
   touches.

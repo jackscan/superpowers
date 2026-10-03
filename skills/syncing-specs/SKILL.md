@@ -30,13 +30,13 @@ Re-run the ten grammar rules over every delta file:
 9. `#` lines inside fenced code blocks are content, not structure.
 10. The capability path must match an exact existing capability (MODIFIED/REMOVED/RENAMED) or name a deliberate new one (ADDED).
 
-A delta at `.../specs/spec.md` (no capability folder), an unpaired `FROM:` / `TO:`, a name in two sections, a MODIFIED/RENAMED on a nonexistent capability, a missing scenario, or all operation sections empty → fix before merging. A main spec that doesn't match the canonical shape → stop and fix (with your human partner if needed) before merging into it.
+A delta at `.../specs/spec.md` (no capability folder), an unpaired `FROM:` / `TO:`, a name in two sections, a MODIFIED/RENAMED on a nonexistent capability, a missing scenario, or a delta with no operation sections (or all sections empty — nothing to merge: drop the file) → fix before merging. A main spec that doesn't match the canonical shape → stop and fix (with your human partner if needed) before merging into it.
 
 ## Merge (RENAMED → REMOVED → MODIFIED → ADDED)
 
 Process each capability in fixed order. Match requirements by exact name — case- and whitespace-sensitive. A near-miss (case/whitespace-folded match) means stop and check for a typo; never auto-match.
 
-**RENAMED** — source block present and target name absent: rewrite the header line in place; position and content preserved; chains are legal. Target already exists → stop. Source absent and target present → already applied, skip. Both absent → stop.
+**RENAMED** — source block present and target name absent: rewrite the header line in place; position and content preserved; chains are legal; case-only renames are legal. Target already exists → stop. Source absent and target present → already applied, skip. Both absent → stop.
 
 **REMOVED** — block present: delete the whole block (scenarios go with it; `Reason` + `Migration` were required at authoring). Block absent: warn and treat as already removed.
 
