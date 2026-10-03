@@ -19,6 +19,16 @@ Before you open a PR against this repo, you MUST:
 
 If any of these checks fail, do not open the PR. Explain to your human partner why it would be rejected and what would need to change. They will thank you for saving them the embarrassment.
 
+## Model Tiers (OpenCode subagent dispatches)
+
+Superpowers skills that dispatch subagents pick models by tier (subagent-driven-development, dispatching-parallel-agents, executing-plans, diagnosing-superpowers). This repo pins each tier to a concrete model in `.opencode/agents/`:
+
+- `tier-cheap` — mechanical tasks, transcription-from-plan implementers, single-file fixes, scoped re-reviews of small diffs
+- `tier-standard` — integration tasks, task reviewers, implementers working from prose
+- `tier-capable` — architecture and design judgment, the final whole-branch review, fix-loop rounds 4-5
+
+When a superpowers skill calls for a tier, dispatch the matching tier agent by name (`subagent` tool with `agent: "tier-cheap"`, etc.) and do not pass `model` inline — the agent definition pins it. "A model at least one tier above" (fix-loop escalation) means: cheap → standard → capable.
+
 ## Pull Request Requirements
 
 **Every PR must fully complete the PR template.** No section may be left blank or filled with placeholder text. PRs that skip sections will be closed without review.
