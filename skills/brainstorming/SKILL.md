@@ -176,6 +176,13 @@ calls you made so they can check those while reading. That's the only
 round of questions the check produces. Without a subagent tool, read the
 document as that builder yourself.
 
+**Spec delta (projects that maintain canonical specs):** If the project
+has a `docs/specs/` directory, invoke superpowers:writing-spec-deltas
+after writing the design document — before handing it to your human
+partner for approval. The delta file(s) are committed with the design
+doc. If `docs/specs/` does not exist, skip: never create it as a side
+effect.
+
 <HARD-GATE>
 Nothing gets built until your human partner approves the full
 description: in chat for a small change, the document for a project.

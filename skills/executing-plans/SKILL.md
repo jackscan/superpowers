@@ -288,6 +288,15 @@ A finding you decide not to fix is a ruling — `Final: Ruling: <finding> —
 <why the code stands> — <cost if wrong>` — and reaches your human partner
 in the rulings list. There is no second fix pass.
 
+**Spec sync (projects that maintain canonical specs):** After the final
+review is clean and its fixes are committed, and before Finish: if the
+project has a `docs/specs/` directory, resolve this plan's change (its
+`**Spec:**` design doc → `docs/specs/changes/<stem>/`) and, if it has delta
+specs, invoke superpowers:syncing-specs to validate and merge them into the
+canonical specs and archive the change — before this plan's workspace is
+deleted (the sync reads the ledger's rulings). No `docs/specs/`, or no
+deltas for this change → skip.
+
 ## Finish
 
 Before you delete anything, collect every ledger line containing
